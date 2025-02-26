@@ -1,4 +1,4 @@
-function extractDataFromPage() {
+function extractJiraTaskInfo() {
     const jiraId = document.getElementById("key-val");
     if (!jiraId) {
         console.error('Could not find JIRA ID on the page (selector: key-val)');
@@ -16,7 +16,6 @@ function extractDataFromPage() {
         console.error('Could not find ATL token in dom response (selector: atl_token)');
         return null;
     }
-    const atlToken = atlTokenArray[0].value;
 
     const jiraTaskTitle = document.getElementById("summary-val");
     if (!jiraTaskTitle || !jiraTaskTitle.textContent) {
@@ -32,7 +31,7 @@ function extractDataFromPage() {
 
     return {
         internalId,
-        atlToken,
+        atlToken: atlTokenArray[0].value,
         jiraTaskTitle: jiraTaskTitle.textContent.trim(),
         jiraTaskId};
 }
@@ -45,23 +44,4 @@ function extractFormTokenFromHtml(html) {
     }
 
     return formTokenArray[0].value;
-}
-
-function getFormattedPastDate(pastHours) {
-    const date = new Date();
-    date.setHours(date.getHours() - pastHours);
-
-    const options = {
-        day: 'numeric',
-        month: 'short',
-        year: '2-digit',
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
-    };
-
-    const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
-
-    // Replace spaces with '/' for the desired format
-    return formattedDate.replace(/ /g, '/');
 }

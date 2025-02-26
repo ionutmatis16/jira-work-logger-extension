@@ -2,7 +2,7 @@ document.getElementById('logTime').addEventListener('click', () => {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
         chrome.scripting.executeScript({
             target: {tabId: tabs[0].id},
-            function: extractDataFromPage
+            function: extractJiraTaskInfo
         }, (results) => {
             const result = document.getElementById("result");
             if (!result) {
@@ -25,7 +25,7 @@ document.getElementById('logTime').addEventListener('click', () => {
 });
 
 function logTime(internalId, atlToken, result) {
-    const formData = getFormData(result);
+    const formData = getPopupFormData(result);
     if (!formData) {
         return;
     } else {
@@ -140,7 +140,7 @@ function formatDate(date) {
     return `${day}/${month}/${year}`;
 }
 
-function getFormData(result) {
+function getPopupFormData(result) {
     const timeLogged = document.getElementById('timeLogged').value;
     if (!timeLogged) {
         setError(result, 'Please enter the time logged');
@@ -209,16 +209,17 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    setTabJiraTitle(result);
-    configureToggle();
-    setDefaultDates();
+    setPopupJiraTitle(result);
+    configurePopupToggle();
+    setPopupDefaultDates();
+    bindPopupDateButtons();
 });
 
-function setTabJiraTitle(result) {
+function setPopupJiraTitle(result) {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
         chrome.scripting.executeScript({
             target: {tabId: tabs[0].id},
-            function: extractDataFromPage
+            function: extractJiraTaskInfo
         }, (results) => {
             if (!results || results.length === 0 || !results[0].result) {
                 setError(result, 'Error in extracting data from the page');
@@ -237,7 +238,7 @@ function setTabJiraTitle(result) {
     });
 }
 
-function configureToggle() {
+function configurePopupToggle() {
     const useDateRangeToggle = document.getElementById("useDateRange");
 
     function toggleDateInputs() {
@@ -258,9 +259,31 @@ function configureToggle() {
     toggleDateInputs();
 }
 
-function setDefaultDates() {
+function setPopupDefaultDates() {
     const date = new Date();
     document.getElementById("singleDate").valueAsDate = date;
     document.getElementById("startDate").valueAsDate = date;
     document.getElementById("endDate").valueAsDate = date;
+}
+
+function bindPopupDateButtons() {
+    let singleDate = document.getElementById("singleDate");
+    if (!singleDate) {
+        return;
+    }
+    const currentDate = singleDate.valueAsDate;
+
+    const increaseDateButton = document.getElementById("increaseDate");
+    if (increaseDateButton) {
+        increaseDateButton.addEventListener('click', () => {
+            singleDate.valueAsDate = new Date(currentDate.setDate(currentDate.getDate() + 1));
+        });
+    }
+
+    const decreaseDateButton = document.getElementById("decreaseDate");
+    if (decreaseDateButton) {
+        decreaseDateButton.addEventListener('click', () => {
+            singleDate.valueAsDate = new Date(currentDate.setDate(currentDate.getDate() - 1));
+        });
+    }
 }
