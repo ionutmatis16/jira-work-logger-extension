@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>My Extension</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif; /* Use Roboto font for Material Design */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: start;
+            padding: 20px;
+            width: 500px;
+            background-color: #f5f5f5; /* Light grey background */
+            font-size: 16px; /* Increased font size */
+            height: 540px;
+        }
+
+        h1 {
+            color: #3f51b5; /* Primary Material Design color */
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        input[type="text"], input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 12px 24px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #3f51b5; /* Primary Material Design color */
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+        }
+
+        button:hover {
+            background-color: #303f9f; /* Slightly darker on hover */
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 40px; /* Adjusted width to match height */
+            height: 20px; /* Adjusted height to 20px */
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 20px; /* Adjusted border-radius to match height */
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px; /* Adjusted height to match slider */
+            width: 14px; /* Adjusted width to match slider */
+            left: 3px; /* Adjusted left position */
+            bottom: 3px; /* Adjusted bottom position */
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #3f51b5;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #3f51b5;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px); /* Adjusted translateX to match slider width */
+        }
+
+        .j-task-title {
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        .extension-info {
+            margin-bottom: 0;
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            height: 75px; /* Increased height for textarea */
+            resize: vertical; /* Allow vertical resizing */
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+        .align-items-start {
+            align-items: start;
+        }
+
+        .date-range {
+            margin-top: 2px;
+            margin-right: 5px;
+            font-size: 13px;
+        }
+
+        .inline-date-label {
+            margin-top: 13px;
+        }
+
+        #timeLogged {
+            padding-right: 10px;
+        }
+
+        #startHour {
+            padding-left: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .shown {
+            display: inherit;
+        }
+
+        .date-range-wrapper {
+            margin-top: 19px;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .success {
+            color: green;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<h1>Logging extension</h1>
+<p class="extension-info">This extension helps you log hours for your current task:</p>
+<p class="j-task-title"></p>
+
+<div class="container">
+    <label for="timeLogged">
+        Time Logged:
+        <input type="text" class="date-input" id="timeLogged" placeholder="Time Spent (e.g. '1h')"/>
+    </label>
+    <label for="startHour">
+        Start Hour:
+        <input type="text" class="date-input" id="startHour" placeholder="Start Hour (e.g. '10:30 AM')"/>
+    </label>
+</div>
+
+<div class="single-date-wrapper" style="width: 100%">
+    <label for="singleDate">
+        Date:
+        <input type="date" id="singleDate" data-date-format="dd/mm/yyyy"/>
+    </label>
+</div>
+
+<div class="container date-range-wrapper">
+    <label class="container" for="startDate">
+        <span class="inline-date-label" style="white-space: nowrap">Start date:</span>
+        <input type="date" id="startDate"/>
+    </label>
+    <label class="container" for="endDate">
+        <span class="inline-date-label" style="white-space: nowrap">End date:</span>
+        <input type="date" id="endDate"/>
+    </label>
+</div>
+
+<label class="d-flex align-items-start" style="pointer-events: none">
+    <span class="date-range">Use Date Range:</span>
+    <label class="toggle-switch">
+        <input type="checkbox" id="useDateRange">
+        <span class="slider" style="pointer-events: bounding-box"></span>
+    </label>
+</label>
+
+<label for="comment">
+    Comment:
+    <textarea id="comment" placeholder="Comment"></textarea>
+</label>
+
+<button id="logTime">Log Time</button>
+
+<div id="result" style="margin-top: 20px"></div>
+
+<script src="popup.js"></script>
+<script src="content.js"></script>
+</body>
+</html>

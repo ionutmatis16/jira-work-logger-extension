@@ -1,1 +1,1 @@
-# jira-work-logger
+# jira-work-logger-extension

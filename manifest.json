@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Jira Work Logger Extension",
+  "version": "1.0",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "https://jira.evozon.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
