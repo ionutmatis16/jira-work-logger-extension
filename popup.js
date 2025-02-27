@@ -271,11 +271,10 @@ function bindPopupDateButtons() {
     if (!singleDate) {
         return;
     }
-    const currentDate = singleDate.valueAsDate;
-
     const increaseDateButton = document.getElementById("increaseDate");
     if (increaseDateButton) {
         increaseDateButton.addEventListener('click', () => {
+            const currentDate = singleDate.valueAsDate;
             singleDate.valueAsDate = new Date(currentDate.setDate(currentDate.getDate() + 1));
         });
     }
@@ -283,6 +282,7 @@ function bindPopupDateButtons() {
     const decreaseDateButton = document.getElementById("decreaseDate");
     if (decreaseDateButton) {
         decreaseDateButton.addEventListener('click', () => {
+            const currentDate = singleDate.valueAsDate;
             singleDate.valueAsDate = new Date(currentDate.setDate(currentDate.getDate() - 1));
         });
     }
